@@ -1,0 +1,53 @@
+import React, { Component } from 'react'
+import { Form, Modal } from 'semantic-ui-react'
+
+const options = [
+    { key: 'm', text: 'Male', value: 'male' },
+    { key: 'f', text: 'Female', value: 'female' },
+]
+
+class UserForm extends Component {
+    state = {}
+
+    handleChange = (e, { value }) => this.setState({ value })
+
+    render() {
+        const { value } = this.state
+        const { open } = this.props;
+        const inlineStyle = {
+            modal: {
+                marginTop: '0px !important',
+                marginLeft: 'auto',
+                marginRight: 'auto'
+            }
+        };
+
+        return (
+            <Modal open={open} style={inlineStyle.modal}>
+                <Modal.Header>Add user</Modal.Header>
+                <Modal.Content >
+                    <Modal.Description>
+                        <Form>
+                            <Form.Group widths='equal'>
+                                <Form.Input fluid label='First name' placeholder='First name' />
+                                <Form.Input fluid label='Last name' placeholder='Last name' />
+                                <Form.Select fluid label='Gender' options={options} placeholder='Gender' />
+                            </Form.Group>
+                            <Form.Group inline>
+                                <label>Size</label>
+                                <Form.Radio label='Small' value='sm' checked={value === 'sm'} onChange={this.handleChange} />
+                                <Form.Radio label='Medium' value='md' checked={value === 'md'} onChange={this.handleChange} />
+                                <Form.Radio label='Large' value='lg' checked={value === 'lg'} onChange={this.handleChange} />
+                            </Form.Group>
+                            <Form.TextArea label='About' placeholder='Tell us more about you...' />
+                            <Form.Checkbox label='I agree to the Terms and Conditions' />
+                            <Form.Button>Submit</Form.Button>
+                        </Form>
+                    </Modal.Description>
+                </Modal.Content>
+            </Modal>
+        )
+    }
+}
+
+export default UserForm;

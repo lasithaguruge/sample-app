@@ -1,8 +1,21 @@
 import React, { Component } from 'react';
 import { Button, Grid, Header, Segment, Table } from 'semantic-ui-react';
+import UserForm from './UserForm';
 
 class UserList extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            isUserModalFormOpen: false
+        }
+    }
+
+    handleUserFormOpenClose = () => {
+        this.setState({isUserModalFormOpen: true})
+    }
+
     render() {
+        const { isUserModalFormOpen } = this.state;
         return (
             <div style={{ minHeight: '500px' }}>
                 <Segment basic padded>
@@ -11,7 +24,7 @@ class UserList extends Component {
                             <Header as='h1' floated='left'>Users</Header>
                         </Grid.Column>
                         <Grid.Column floated='right' width={1}>
-                            <Button circular icon='plus' color='green' />
+                            <Button circular icon='plus' color='green' onClick={this.handleUserFormOpenClose}/>
                         </Grid.Column>
                     </Grid>
                 </Segment>
@@ -32,6 +45,7 @@ class UserList extends Component {
                         </Table.Body>
                     </Table>
                 </Segment>
+                {<UserForm open={isUserModalFormOpen}/>}
             </div>
         )
     }
