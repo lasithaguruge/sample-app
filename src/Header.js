@@ -42,6 +42,8 @@ class Header extends Component {
     }
 }
 
+//here router validate the incoming prop types as objets, there for
+//we need to specify the prop type as object
 Header.contextTypes = {
     router: PropTypes.object.isRequired
 }
