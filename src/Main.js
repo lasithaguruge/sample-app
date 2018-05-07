@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
+import { Route, Switch } from 'react-router-dom';
+import Home from './component/Home' 
 
 class Main extends Component {
     render() {
+        const publicRoutes = [
+            <Route exact path='/' component={Home} key='/' />
+        ]
         return (
-            <div style={{minHeight: '350px'}}>
-                <h1>HERE'S THE BODY CONTENT</h1>
-            </div>
+            <main>
+                <Switch>
+                    {publicRoutes}
+                </Switch>
+            </main>
         );
     }
 }
