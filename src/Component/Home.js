@@ -175,27 +175,27 @@ class Home extends Component {
     }
 
     handleOnRowEdit(position, operation) {
-        let { table, editToBeColumn } = this.state;
+        let { table, selectedRowIndex } = this.state;
         let { rows } = table;
 
         let newRowIndex = uuid();
         const newRow = {
-            key: newRowIndex,
+            id: newRowIndex,
         };
 
         if (operation === 'add') {
             switch (position) {
                 case 'before':
-                    rows.splice(editToBeColumn.columnIndex, 0, newColumn)
+                    rows.splice(selectedRowIndex, 0, newRow)
                     break;
                 case 'after':
-                    rows.splice(editToBeColumn.columnIndex + 1, 0, newColumn)
+                    rows.splice(selectedRowIndex + 1, 0, newRow)
                     break;
                 default:
                     console.log('Sorry, we are out of ' + position + '.');
             }
         } else {
-            rows.splice(editToBeColumn.columnIndex, 1);
+            rows.splice(selectedRowIndex, 1);
         }
 
         return rows;

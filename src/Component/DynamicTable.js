@@ -33,7 +33,7 @@ class DynamicTable extends React.Component {
                 sortable: sortable,
                 events: {
                     onClick: (ev, args) => {
-                        // this.props.onVisibleEditRowPanel(true, args.rowIdx);
+                        this.props.onVisibleOptionsChange("row", true, args.rowIdx);
                     }
                 }
 
@@ -86,7 +86,7 @@ class DynamicTable extends React.Component {
             editToBeColumn,
             onTableEdit } = this.props;
         let { data } = editToBeColumn;
-        const { isColumnEditorVisible } = tableEditorvisibleOptions;
+        const { isColumnEditorVisible, isRowEditorVisible } = tableEditorvisibleOptions;
         return (
             <div>
                 <Transition.Group animation={'fade up'} duration={500}>
@@ -103,7 +103,24 @@ class DynamicTable extends React.Component {
                             <Button color='blue' basic content='Insert before' onClick={() => {onTableEdit("before", "add", "column")}}/>
                             <Button color='blue' basic content='Insert after'  onClick={() => {onTableEdit("after", "add", "column")}}/>
                             <Button color='red' basic content='Remove' onClick={() => {onTableEdit("", "remove", "column")}}/>
-                            <Button color='red' floated='right' basic animated='vertical' onClick={() => onVisibleOptionsChange(false)}>
+                            <Button color='red' floated='right' basic animated='vertical' onClick={() => onVisibleOptionsChange("column", false)}>
+                                <Button.Content hidden>Close</Button.Content>
+                                <Button.Content visible>
+                                    <Icon name='close' />
+                                </Button.Content>
+                            </Button>
+                        </div>}
+                </Transition.Group>
+                <Transition.Group animation={'fade up'} duration={500}>
+                    {isRowEditorVisible &&
+                        <div>
+                            <div>
+                                <Header as='h5' content='Edit rows' />
+                            </div>
+                            <Button color='blue' basic content='Insert before' onClick={() => {onTableEdit("before", "add", "row")}}/>
+                            <Button color='blue' basic content='Insert after'  onClick={() => {onTableEdit("after", "add", "row")}}/>
+                            <Button color='red' basic content='Remove' onClick={() => {onTableEdit("", "remove", "row")}}/>
+                            <Button color='red' floated='right' basic animated='vertical' onClick={() => onVisibleOptionsChange("row", false)}>
                                 <Button.Content hidden>Close</Button.Content>
                                 <Button.Content visible>
                                     <Icon name='close' />
@@ -114,7 +131,7 @@ class DynamicTable extends React.Component {
                 <Divider hidden />
                 <DraggableContainer>
                     <ReactDataGrid
-                        onGridSort={(sortColumn) => onVisibleOptionsChange(true, sortColumn)}
+                        onGridSort={(sortColumn) => onVisibleOptionsChange("column", true, sortColumn)}
                         ref={node => this.grid = node}
                         enableCellSelect={true}
                         columns={this.getColumns()}
