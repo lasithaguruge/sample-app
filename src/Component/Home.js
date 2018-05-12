@@ -13,9 +13,11 @@ class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            table: {
-                columns: [],
-                rows: []
+            program: {
+                table: {
+                    columns: [],
+                    rows: []
+                }
             },
             tableEditorvisibleOptions: {
                 isColumnEditorVisible: false,
@@ -34,7 +36,7 @@ class Home extends Component {
     }
 
     initTable = () => {
-        let { table } = this.state;
+        let { table } = this.state.program;
         let { columns, rows } = table;
 
         for (var i = 0; i < 4; i++) {
@@ -48,18 +50,24 @@ class Home extends Component {
         }
 
         this.setState({
-            table: {
-                columns: columns,
-                rows: rows
+            program: {
+                ...this.state.program,
+                table: {
+                    columns: columns,
+                    rows: rows
+                }
             }
         })
     }
 
     handleOnTableRowChange = (rows) => {
         this.setState({
-            table: {
-                ...this.state.table,
-                rows: rows
+            program: {
+                ...this.state.program,
+                table: {
+                    ...this.state.program.table,
+                    rows: rows
+                }
             }
         })
 
@@ -67,9 +75,9 @@ class Home extends Component {
     }
 
     handleOnVisibleOptionsChange = (type, isValue, key) => {
-        if(type === 'column') {
+        if (type === 'column') {
             this.handleOnVisibleColumnEditor(isValue, key)
-        }else{
+        } else {
             this.handleOnVisibleRowEditor(isValue, key);
         }
     }
@@ -99,7 +107,8 @@ class Home extends Component {
     }
 
     findSelectedColumn(key) {
-        let { columns, editToBeColumn } = this.state.table;
+        let { columns } = this.state.program.table;
+        let { editToBeColumn } = this.state;
 
         for (var i = 0; i < columns.length; i++) {
             let currentColumn = columns[i];
@@ -117,21 +126,25 @@ class Home extends Component {
     }
 
     handleOnColumnNameTextChange = (e, name) => {
-        let { editToBeColumn, table } = this.state;
+        let { editToBeColumn, program } = this.state;
+        let { table } = program;
         let { columns } = table;
 
         editToBeColumn.data.name = name;
         columns.splice(editToBeColumn.columnIndex, 1, editToBeColumn.data);
         this.setState({
-            table: {
-                ...table,
-                columns: columns
+            program: {
+                ...this.state.program,
+                table: {
+                    ...this.state.program.table,
+                    columns: columns
+                }
             }
         })
     }
 
     handleOnTableEdit = (position, operation, type) => {
-        let { columns, rows } = this.state.table;
+        let { columns, rows } = this.state.program.table;
         if (type === 'column') {
             columns = this.handleOnColumnEdit(position, operation)
         } else {
@@ -139,15 +152,19 @@ class Home extends Component {
         }
 
         this.setState({
-            table: {
-                rows: rows,
-                columns: columns
+            program: {
+                ...this.state.program,
+                table: {
+                    rows: rows,
+                    columns: columns
+                }
             }
         })
     }
 
     handleOnColumnEdit(position, operation) {
-        let { table, editToBeColumn } = this.state;
+        let { program, editToBeColumn } = this.state;
+        let { table } = program;
         let { columns } = table;
 
         let newColumnIndex = uuid();
@@ -175,7 +192,8 @@ class Home extends Component {
     }
 
     handleOnRowEdit(position, operation) {
-        let { table, selectedRowIndex } = this.state;
+        let { program, selectedRowIndex } = this.state;
+        let { table } = program;
         let { rows } = table;
 
         let newRowIndex = uuid();
@@ -202,7 +220,11 @@ class Home extends Component {
     }
 
     render() {
-        const { table, tableEditorvisibleOptions, editToBeColumn } = this.state;
+        const {
+            program,
+            tableEditorvisibleOptions,
+            editToBeColumn } = this.state;
+        const { table } = program;
         return (
             <div style={{ minHeight: '350px' }}>
                 <h1>Welcome to home page!!!</h1>

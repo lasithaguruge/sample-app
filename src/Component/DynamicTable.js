@@ -1,20 +1,9 @@
 import React, { Component } from 'react'
 import { Button, Divider, Header, Segment, Transition, Input, Icon } from 'semantic-ui-react';
-import update from 'immutability-helper';
-import { v4 as uuid } from 'uuid';
 import ReactDataGrid from 'react-data-grid';
-import { Socket } from 'dgram';
-const { Toolbar, Draggable: { Container: DraggableContainer } } = require('react-data-grid-addons');
-
+const { Draggable: { Container: DraggableContainer } } = require('react-data-grid-addons');
 
 class DynamicTable extends React.Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-
-        }
-    }
 
     getColumns = () => {
         const { columnConfig, table } = this.props;
@@ -79,10 +68,10 @@ class DynamicTable extends React.Component {
     };
 
     render() {
-        let { 
-            tableEditorvisibleOptions, 
+        let {
+            tableEditorvisibleOptions,
             onVisibleOptionsChange,
-            onColumnNameTextChange, 
+            onColumnNameTextChange,
             editToBeColumn,
             onTableEdit } = this.props;
         let { data } = editToBeColumn;
@@ -100,9 +89,9 @@ class DynamicTable extends React.Component {
                                 value={data.name}
                                 onChange={(e, { value }) => { onColumnNameTextChange(e, value) }}
                             />
-                            <Button color='blue' basic content='Insert before' onClick={() => {onTableEdit("before", "add", "column")}}/>
-                            <Button color='blue' basic content='Insert after'  onClick={() => {onTableEdit("after", "add", "column")}}/>
-                            <Button color='red' basic content='Remove' onClick={() => {onTableEdit("", "remove", "column")}}/>
+                            <Button color='blue' basic content='Insert before' onClick={() => { onTableEdit("before", "add", "column") }} />
+                            <Button color='blue' basic content='Insert after' onClick={() => { onTableEdit("after", "add", "column") }} />
+                            <Button color='red' basic content='Remove' disabled={this.getColumnSize() < 2} onClick={() => { onTableEdit("", "remove", "column") }} />
                             <Button color='red' floated='right' basic animated='vertical' onClick={() => onVisibleOptionsChange("column", false)}>
                                 <Button.Content hidden>Close</Button.Content>
                                 <Button.Content visible>
@@ -115,17 +104,23 @@ class DynamicTable extends React.Component {
                     {isRowEditorVisible &&
                         <div>
                             <div>
+                                <Divider hidden fitted />
                                 <Header as='h5' content='Edit rows' />
                             </div>
-                            <Button color='blue' basic content='Insert before' onClick={() => {onTableEdit("before", "add", "row")}}/>
-                            <Button color='blue' basic content='Insert after'  onClick={() => {onTableEdit("after", "add", "row")}}/>
-                            <Button color='red' basic content='Remove' onClick={() => {onTableEdit("", "remove", "row")}}/>
+                            <Button color='blue' basic content='Insert before' onClick={() => { onTableEdit("before", "add", "row") }} />
+                            <Button color='blue' basic content='Insert after' onClick={() => { onTableEdit("after", "add", "row") }} />
+                            <Button color='red' basic content='Remove' disabled={this.getSize() < 2} onClick={() => { onTableEdit("", "remove", "row") }} />
                             <Button color='red' floated='right' basic animated='vertical' onClick={() => onVisibleOptionsChange("row", false)}>
                                 <Button.Content hidden>Close</Button.Content>
                                 <Button.Content visible>
                                     <Icon name='close' />
                                 </Button.Content>
                             </Button>
+                            <div>
+                                <Divider hidden fitted />
+                                <Header as='h5' icon='info circle' subheader='To edit table cell double click on the cell' />
+                            </div>
+
                         </div>}
                 </Transition.Group>
                 <Divider hidden />
