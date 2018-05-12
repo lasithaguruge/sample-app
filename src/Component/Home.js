@@ -115,7 +115,6 @@ class Home extends Component {
 
     render() {
         const { table, tableEditorvisibleOptions, editToBeColumn } = this.state;
-        console.log("This", table.columns)
         return (
             <div style={{ minHeight: '350px' }}>
                 <h1>Welcome to home page!!!</h1>
