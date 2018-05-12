@@ -31,6 +31,12 @@ class DynamicTable extends React.Component {
                 width: width,
                 resizable: resizable,
                 sortable: sortable,
+                events: {
+                    onClick: (ev, args) => {
+                        // this.props.onVisibleEditRowPanel(true, args.rowIdx);
+                    }
+                }
+
             }
             outputColumns.push(column);
         }
@@ -73,7 +79,12 @@ class DynamicTable extends React.Component {
     };
 
     render() {
-        let { tableEditorvisibleOptions, onVisibleOptionsChange, onColumnNameTextChange, editToBeColumn } = this.props;
+        let { 
+            tableEditorvisibleOptions, 
+            onVisibleOptionsChange,
+            onColumnNameTextChange, 
+            editToBeColumn,
+            onTableEdit } = this.props;
         let { data } = editToBeColumn;
         const { isColumnEditorVisible } = tableEditorvisibleOptions;
         return (
@@ -87,11 +98,11 @@ class DynamicTable extends React.Component {
                             <Input
                                 placeholder={'Edit cell'}
                                 value={data.name}
-                                onChange={(e, {value}) => {onColumnNameTextChange(e, value)}}
+                                onChange={(e, { value }) => { onColumnNameTextChange(e, value) }}
                             />
-                            <Button color='blue' basic content='Insert before' />
-                            <Button color='blue' basic content='Insert after' />
-                            <Button color='red' basic content='Remove' />
+                            <Button color='blue' basic content='Insert before' onClick={() => {onTableEdit("before", "add", "column")}}/>
+                            <Button color='blue' basic content='Insert after'  onClick={() => {onTableEdit("after", "add", "column")}}/>
+                            <Button color='red' basic content='Remove' onClick={() => {onTableEdit("", "remove", "column")}}/>
                             <Button color='red' floated='right' basic animated='vertical' onClick={() => onVisibleOptionsChange(false)}>
                                 <Button.Content hidden>Close</Button.Content>
                                 <Button.Content visible>

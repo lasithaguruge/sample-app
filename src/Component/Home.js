@@ -18,13 +18,14 @@ class Home extends Component {
                 rows: []
             },
             tableEditorvisibleOptions: {
-                isColumnEditorVisible: false
+                isColumnEditorVisible: false,
+                isRowEditorVisible: false
             },
             editToBeColumn: {
                 columnIndex: '',
                 data: null
-            }
-
+            },
+            selectedRowIndex: null
         }
     }
 
@@ -65,7 +66,15 @@ class Home extends Component {
         console.log("THIS TABLE ", this.state.table)
     }
 
-    handleOnVisibleOptionsChange = (isValue, key) => {
+    handleOnVisibleOptionsChange = (type, isValue, key) => {
+        if(type === 'column') {
+            this.handleOnVisibleColumnEditor(isValue, key)
+        }else{
+            this.handleOnVisibleRowEditor(isValue, key);
+        }
+    }
+
+    handleOnVisibleColumnEditor = (isValue, key) => {
         let { editToBeColumn } = this.state;
         if (key) {
             editToBeColumn = this.findSelectedColumn(key);
@@ -77,8 +86,16 @@ class Home extends Component {
             },
             editToBeColumn: editToBeColumn
         })
+    }
 
-
+    handleOnVisibleRowEditor = (isValue, key) => {
+        this.setState({
+            selectedRowIndex: key,
+            tableEditorvisibleOptions: {
+                ...this.state.tableEditorvisibleOptions,
+                isRowEditorVisible: isValue
+            },
+        })
     }
 
     findSelectedColumn(key) {
@@ -113,6 +130,77 @@ class Home extends Component {
         })
     }
 
+    handleOnTableEdit = (position, operation, type) => {
+        let { columns, rows } = this.state.table;
+        if (type === 'column') {
+            columns = this.handleOnColumnEdit(position, operation)
+        } else {
+            rows = this.handleOnRowEdit(position, operation)
+        }
+
+        this.setState({
+            table: {
+                rows: rows,
+                columns: columns
+            }
+        })
+    }
+
+    handleOnColumnEdit(position, operation) {
+        let { table, editToBeColumn } = this.state;
+        let { columns } = table;
+
+        let newColumnIndex = uuid();
+        const newColumn = {
+            key: newColumnIndex,
+            name: 'Column Name',
+        };
+
+        if (operation === 'add') {
+            switch (position) {
+                case 'before':
+                    columns.splice(editToBeColumn.columnIndex, 0, newColumn)
+                    break;
+                case 'after':
+                    columns.splice(editToBeColumn.columnIndex + 1, 0, newColumn)
+                    break;
+                default:
+                    console.log('Sorry, we are out of ' + position + '.');
+            }
+        } else {
+            columns.splice(editToBeColumn.columnIndex, 1);
+        }
+
+        return columns;
+    }
+
+    handleOnRowEdit(position, operation) {
+        let { table, editToBeColumn } = this.state;
+        let { rows } = table;
+
+        let newRowIndex = uuid();
+        const newRow = {
+            key: newRowIndex,
+        };
+
+        if (operation === 'add') {
+            switch (position) {
+                case 'before':
+                    rows.splice(editToBeColumn.columnIndex, 0, newColumn)
+                    break;
+                case 'after':
+                    rows.splice(editToBeColumn.columnIndex + 1, 0, newColumn)
+                    break;
+                default:
+                    console.log('Sorry, we are out of ' + position + '.');
+            }
+        } else {
+            rows.splice(editToBeColumn.columnIndex, 1);
+        }
+
+        return rows;
+    }
+
     render() {
         const { table, tableEditorvisibleOptions, editToBeColumn } = this.state;
         return (
@@ -125,7 +213,8 @@ class Home extends Component {
                     tableEditorvisibleOptions={tableEditorvisibleOptions}
                     onVisibleOptionsChange={this.handleOnVisibleOptionsChange}
                     editToBeColumn={editToBeColumn}
-                    onColumnNameTextChange={this.handleOnColumnNameTextChange} />
+                    onColumnNameTextChange={this.handleOnColumnNameTextChange}
+                    onTableEdit={this.handleOnTableEdit} />
             </div>
         );
     }
